@@ -86,7 +86,10 @@ dates = [
     "2018-08-02", "2018-08-07", "2018-08-11", "2018-08-14", "2018-08-21", "2018-08-28",
 
     # September 2018
-    "2018-09-04", "2018-09-06", "2018-09-11", "2018-09-12", "2018-09-13"
+    "2018-09-04", "2018-09-06", "2018-09-11", "2018-09-12", "2018-09-13",
+
+    # Fake November 6
+    "test-2018-11-06"
 
 ]
 
@@ -97,6 +100,11 @@ start_time = time.time()
 
 while q:
     date = q[-1]
+
+    test = "false"
+    if "test-" in date:
+        date = date.replace('test-', '')
+        test = "true"
 
     filepath = DATA_FOLDER + "/raw_ap/%s.json" % date
     if os.path.isfile(filepath):
@@ -113,8 +121,8 @@ while q:
 
     print("downloading %s" % date)
     response = requests.get(
-        "https://api.ap.org/v2/elections/%s?test=false&format=json%s"
-        "&apikey=%s" % (date, query, AP_API_KEY))
+        "https://api.ap.org/v2/elections/%s?test=%s&format=json%s"
+        "&apikey=%s" % (date, test, query, AP_API_KEY))
     counter += 1
     if response.status_code == 403:
         print("hit rate limit!")
